@@ -1,29 +1,25 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios'; // Don't forget to import axios
+import React, { useState, useEffect } from "react";
 
-function useTodos() {
-  const [todos, setTodos] = useState([]);
+function useDebounce(value, timeout) {
+  const [debouncedValue, setDebounced] = useState(value);
 
   useEffect(() => {
-    axios.get("")
-      .then((res) => {
-        setTodos(res.data.todos);
-      })
-      .catch((error) => {
-        console.error("Error fetching todos:", error);
-      });
-  }, []); // Empty dependency array to execute the effect only once
-
-  return todos;
+    setTimeout(() => {
+      setDebounced(value);
+    }, 1000);
+  },[value]);
+  return debouncedValue;
 }
 
 function App() {
-  const todos = useTodos();
+  const [value, setValue] = useState(0);
+  const debouncedValue = useDebounce(value, 500);
 
   return (
-    <div>
-      {todos}
-    </div>
+    <>
+      Debounced value is {debouncedValue}
+      <input type="text" onChange={(e) => setValue(e.target.value)} />
+    </>
   );
 }
 
